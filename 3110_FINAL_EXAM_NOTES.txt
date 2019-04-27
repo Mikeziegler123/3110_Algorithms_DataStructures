@@ -33,7 +33,7 @@
 			- both Tl(eft) and Tr(right) are binary search trees
 			- all values of Tl must be less than root node and root node must be less than Tr
 				Tl < root < Tr
-							 10
+						     10
 						    /  \
 						   5    8
 						  /\    | \
