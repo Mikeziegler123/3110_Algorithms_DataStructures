@@ -1,0 +1,852 @@
+// Author: Michael Ziegler				  Exam Date: Monday, 4/29 12:30pm-2:30pm
+// Algorithms and Data Structures
+//____________________________Final_Exam_Notes__________________________________  
+
+----TREES-------HEAPS-------HASHING--------SORTING-------GRAPHS--------KNAPSACK-   
+
+----------------------------------_TREES_---------------------------------------
+	- connected graph with no loops
+		- root: beginning of tree
+			- no parent 
+		- parent: node directly above node n in tree
+		- child of node: a node direcctly below node n in tree
+			- only one level below
+		- leaf: node with no children
+		- internal node: at least one child
+		- sibling node: share same parent
+	- empty tree is one with no root
+	- rootPtr points to root node therefore can get to every node 
+		- null rootPtr == empty tree
+	- ancestor: nodes in path to node except final node itself
+	- descendent: a node on path to leaf node
+	- subtree: a tree that consists of a child of n and the child's descendents
+	- height of tree: number of nodes on the longest path from root to leaf
+	- level of node
+		- if node is the root = 1
+		- all other level is 1 greater than level of parent
+		
+	- binary tree
+		- each node has UP TO 2 children
+		- binary search tree
+			- n's value is greater than all values in its left subtree Tl
+			- n's value is less than all values in its right subtree Tr
+			- both Tl(eft) and Tr(right) are binary search trees
+			- all values of Tl must be less than root node and root node must be less than Tr
+				Tl < root < Tr
+							 10
+						    /  \
+						   5    8
+						  /\    | \
+						 4  8  15  25
+	- FULL binary tree
+		- at every level, there is maximum # of nodes
+		- (2^height) - 1
+			- height of 3 = 7 nodes
+	- COMPLETE binary tree
+		- fill tree from top -> bottom, left -> right
+		- only move to next level if current level is full (full binary tree)
+		- no holes are allowed
+		- FULL binary tree is special case of COMPLETE binary tree
+		- range (height)
+			log(#nodes) <= height <= #nodes
+	
+		- EXAMPLE: Representation of binary tree in C++:
+		// pointer based
+	
+		// create structure
+				struct TreeNode{
+					TreeItemValue item; //can be any data object
+					Treenode *lptr; //left pointer
+					TreeNode *rptr; //right pointer
+				};
+		
+		// if left or right child pntr has no children 
+			// make null ptr
+			// TreeNode *rootptr points to root node
+			TreeNode *p;
+
+		// how to check if *p points to a leaf node?
+				// check if lptr & rptr are NULL
+				if (p->lptr == nullptr) && (p->rptr == nullptr)
+					// if true, then node is a leaf node
+
+		// to access the object within
+				(rootPtr->lptr)->item; OR (*(rootPtr->lprt).item;
+		// array (for complete binary tree)
+			[10, 9, 7, 6, 5, 11, 12, 13, 14]
+			// index of node: n
+				// index of n's leftchild: 2n+1
+				// index of n's rightchild: 2n+2
+				// index of n's parent: (n-1)/2
+	
+	// search in binary tree
+		// use recursive solution (instead of iterative)
+			base case: tree is empty
+		bool search(rootPtr,search_value_x){
+			if (rootPtr == nullPtr)
+				return false;
+			if (rootPtr -> item == x)
+				return true;
+			if (search(rootPtr->lptr,x)
+				return true;
+			return (search(rootPtr->rptr,x));
+		}
+		
+		- O(n) efficiency (worst)
+			- best is root(1)
+	// search in binary search tree
+		bool search(rootPtr,x){
+			if (rootPtr == nullPtr)
+				return false;
+			if (rootPtr -> item == x)
+				return true;
+			else if (rootPtr->item < x)
+				return (search(rootPtr->rptr,x);
+			else
+				return (search(rootPtr->lptr,x));
+		}
+		
+		- O(height) efficiency
+			-logn or n
+				- avg logn
+	
+	- traverse for binary search tree
+					  50
+				   /      \
+				  30       80
+				/  \      /   \
+			  20    40    70     90
+			 /			/   \    /
+			10         60    75  85
+		- "traverse": visit every node once and only once
+			- 3 orders
+
+				- pre-order: root node -> left subtree followed by right subtree
+
+				- in-order: visit left subtree -> root -> right subtree
+
+				- post-order: visit left subtree -> all nodes in right subtree -> root
+				-----------------------------------------------------------
+						
+			->Pre-Order: 50 | 30 20 10 40   | 80 70 60 75 90 85
+					   [r]  [left subtree]  [right subtree]
+				   
+			->In-Order: 10 20 30 40 | 50 | 60 70 75 80 85 90
+						[l tree]    [r]    [r tree]
+					- in order always gives you ascending values
+
+			->Post-Order: 10 20 40 30 | 60 75 70 85 90 80 | 50
+						 [l tree]		[r tree]		  [r]
+				-----------------------------------------------------------
+
+	- implement pre-order traversal
+			void pre_order(TreeNode* rootPtr){
+				if (rootPtr == nullPtr) //base case
+					return;
+				visit(rootPtr->data); //data manipulation
+				if (rootPtr->lptr != NULL) //vist left subtree
+					pre_order(rootPtr->lptr);
+				if (rootPtr->rptr != NULL) //visit right subtree
+					pre_order(rootPtr->rptr);
+			}
+
+	- implement in-order
+			void in_order(TreeNode* rootPtr){
+				if (rootPtr == nullPtr) //base case
+					return;
+				visit(rootPtr->data); //data manipulation
+				if (rootPtr->lptr != NULL) //vist left subtree
+					in_order(rootPtr->lptr);
+				if (rootPtr->rptr != NULL) //visit right subtree
+					in_order(rootPtr->rptr);
+			}
+        ----------------------------------------------------------------
+
+	- insert into binary search tree
+		- if the fxn needs to change the value of pointer itself needs to pass pntr by reference
+		- if fxn needs to change the value pointed by the pointer needs to pass the pointer by value
+		void BST_insert(TreeNode* & rootPtr, int x){ //rootPtr must be passed by reference 
+			if (rootPtr == nullPtr){ //base case insertion
+				rootPtr = new TreeNode; //new node
+				rootPtr-> item = x; 
+				rootPtr-> lptr = rootPtr->rptr = nullPtr; //set node to nullPtrs
+			}
+			if (rootPtr->item < x) //if item is less than go right
+				BST_insert(rootPtr->rptr, x);
+			else
+				BST_insert(rootPtr->lptr, x); //else go left
+			return;
+		}
+		- Efficiency O(logn)
+	- always make a copy by in-order traversal
+	- Deletion from a BST
+		1 delete leaf node
+			- change parent pointer to node to null 
+			- delete leaf node
+		2 delete a node with one child
+			- change parent pointer to point to target's child
+		3 delte a node with two childs
+			1 find in-order successor (ascending order)
+				- go to immediate right child subtree and follow left child pointer (smallest in right subtree)
+			2 swap the value to be removed with its in order successor
+				- the successor CANNOT have left child
+				- has at most 1 right child
+			3 delete node using 'one child' or 'no child' methods
+		- O(heigh) efficiency (O(logn))
+	- implementation
+		1. define a function pointer
+		2. function objects
+			- function call operator () is overloaded
+				return_type operator () (...parameters...); 
+		3. function <void (int)> x;
+			- create variable x 
+				- x is a fxn reference to a function with this signature
+					x = &print;
+					x(10); 
+		- destroy_BST fxn in destructor & assignment operator
+		- copy_BST fxn in constructor & copy constructor
+	
+	
+
+	Data Structures		| insert	| delete	| search 	//avg cases
+	list					O(n)		O(n)		O(n)		
+	sorted list				O(n)		O(n)		O(n)
+	unsorted array			O(n)		O(n)		O(n)
+	deque					O(n)		O(n)		O(n)
+	hash map				O(1)		O(1)		O(1)
+
+
+
+----------------------------_HEAPS_---------------------------------------------
+- Heap (data structure not memory)
+	- is a complete binary tree with restrictions
+		- for each node in heap: Tl-r-Tr
+			r: greater than all values in Tl & Tr
+			Tl & Tr: are also heaps
+			- greater than == maxHeap
+			- less than == minHeap
+	- represent using pointers or array
+	- semi heap
+		- semi-heap if both Tl & Tr are beats but whole tree is  not  a heap
+			- root node is not largest
+		- pick largest value of Tr or Tl and swap with root
+			- thru recursion continue until full HEAP
+		- O(height) == o(logn) (bc complete tree)sd
+	- delete
+		- remaining tree shouldbe heap
+		- swap root with last item
+			- decrease size of heap by 1
+			- fix to full heap
+		- O(logn)
+	- heap sort
+		- array to be sorted can be viewed as complete Binary tree
+			[9 10 17 5 8 20 15 19 25 11]
+			- not necc a heap
+		- convert to a heap
+			- find last non leaf node 
+				(i-1)/2
+				- either heap or semi heap
+					- if semi heap --> convet to heap
+		- once it is heap, sort it
+			- largest item is index 0 --> should be last
+				- swap them
+				- take out of heap by decreasing size by 1
+				- repeat  
+				- O(logN*N) for each largest value
+	- priority queue
+		- first in first out
+		- orders items by a priority value
+			- like a hospital
+		- returns value with higest priority
+			 - remove doesnt need a value
+		- use a heap
+			- root is highest priority
+		- STL priority_queue (implemented as vector (with some restrictions))
+		
+		
+     -----------------------_Algorithm Analysis_---------------------------
+	- calculate # of basic operations an algorithm needs
+		int sum = 0; //1 operation (assignment)
+		for (int i = 0;i < n; i++) // (i=0)= 1x, (i<n) = n+1, (i++) = n
+			sum = values[i] + sum; (=), (values[i] + sum) = 1 for each iteration
+		// 1 + 1 + (n+1) + n + (1+1) * n = 4n+3 operations
+	- growth rate funcions
+		- f(n) = 4n+3 (n is size of problem) (n is size of array of above code)
+		- O(f(n)) Big O notation
+			- Big O gives you a cap on # of operations
+			- Properties of Big O notation
+			1. O(10n^3) = O(n^3) ignore coefficient
+			2. O(n^2+n) = O(n^2) ignore lower terms
+			3. O(f(n))+O(g(n)) = O(f(n)+g(n)) //combine for notation
+			int sum = 0;
+			for (int i=0;i<n;i++)
+				sum = sum+values[i];
+			// O(4n+3) -> 0(4n) -> O(n) using properties
+		- Best case: min time needed to solve problem of size n
+		  Worst case: max time needed to solve problem of size n
+		  Average case: average time needed to solve a problem of size n*m
+		- Sequential Search
+			- best case = O(1) //first element is the one you are looking for
+			- worst case = O(n) // search element is not found
+			- avg case = O(n) //proportional to size of array
+
+
+------------------------------_HASHING_-----------------------------------------
+	- Hash Function (returns index to where key's value is in hash table)
+		- takes key as input <key,data>
+		- output to hashtable
+		- same key always returns same index
+		- cost: constant (small)
+		- able to distribute the keys EVENLY across hash table
+		- defined with mod % 
+			- ensures index is in range of hash table
+		h(k) = k%tableSize //tableSize == prime#
+	- search for key gets index in hashtable
+		- O(1)
+	- collision
+		1) seperate chaining
+			- each element in hash table is a pointer
+			- maintain a list at each location
+				- initially an empty list
+			insert 89 -> h(k)=k%10 = h(89)=9 (insert into index 9)
+				   18 -> h(k)=k%10 = h(18)=8
+				   49 -> h(k)=k%10 = h(49)=9
+				   58 -> h(58)= 8
+				   69 -> h(69)=9
+				   15 -> h(15)=5
+					Hash Table
+					0 | \
+					1 | \
+					2 | \
+					3 | \ 
+					4 | \
+					5 | -> 15\
+					6 | \
+					7 | \
+					8 | -> 58 -> 18\
+					9 | -> 69 -> 49 -> 89\
+		2) open addressing approach
+			- at each location you can save one value
+			- if collision occurs find an empty spot
+				- linear probing
+					f(i) = (h(k) + i)%hashTable (i = 0,1,2,3...)
+					- use hash fxn to find location
+					- if taken take next space
+						- if taken take the next space (repeat)
+					89 -> h(k)=k%10 = h(89)=9 (empty so insert
+					18 -> h(18)=8
+					49 -> h(49)=9 (9 is taken so move on)
+					58 -> h(58)=8
+					69 -> h(69)=9
+					15 -> h(15)=5
+					   Hash Table
+						0 | 49
+						1 | 58
+						2 | 69
+						3 | \ 
+						4 | \
+						5 | 15
+						6 | \
+						7 | \
+						8 | 18
+						9 | 89
+					- search operates the same way
+				- quadratic probing
+					f(i) = (h(k)+i^2)%tableSize
+					89 -> h(k)=k%10 = h(89)=9 (empty so insert
+					18 -> h(18)=8
+					49 -> h(49)= 9 TAKEN-> h(49)+1^2)%hashTable == 10%10 = 0
+					58 -> h(58)= 8 TAKEN-> h(58)+1^2)%hashTable == TAKEN(process i=2,3)-> h(58)+1^2%hashTable = 2
+					69 -> h(69)=9
+					15 -> h(15)=5
+					   Hash Table
+						0 | 49
+						1 | 
+						2 | 58
+						3 | 69 
+						4 | \
+						5 | 15
+						6 | \
+						7 | \
+						8 | 18
+						9 | 89
+				- double hashing
+					- two hash fxns h1() & h2()
+						- h1() calculates initial location
+						- h2() calculates the step size for initial location
+							- h2(k) = prime#(7) - k%prime#(7)
+						- f(i) = h1(k) + (i * h2(k))
+					h(89)= 9
+					h(18) = 8
+					h(49) = 9 TAKEN-> h2(49) = 7-49%7 = 7
+						h1(49) + i * h2(49) == (9 + 7i)%hashTable = 6
+					h1(58) = 8 TAKEN-> h2(58) = 7-58%7 = 5
+						h1(58) + i * h2(58) == (8 + 5i)%hashTable = 4
+					h1(69) = 9 TAKEN-> h2(69) = 1
+						h1(69) + i * h2(69) = 0
+					Hash Table
+						0 | 69
+						1 | \
+						2 | \
+						3 | \
+						4 | 58
+						5 | \
+						6 | 49
+						7 | \
+						8 | 18
+						9 | 89
+		- make sure table is no more than 2/3 full
+			- if approaching 2/3 full -- increase hashtable size
+				- must rehash after size increase
+	- efficiency
+		- not efficient for printing all values in hash table
+		- not efficient for finding largest/min value
+			- must go thru every location
+	- unordered_map<string,string> roster //<name,phone#>
+		roster["David"]; //returns phone# from key with "David"
+			- if doesnt exist will insert - BE CAREFUL
+		roster["David"] = "234-234-5234";
+			- will change number for david
+			- if doesnt exist will insert i
+		find, emplace functions
+		
+		
+
+-------------------------------_SORTING_----------------------------------------
+		1. selection sort: go thru array to find largest value and put it in right position
+			[40,70,30,35,17]
+			- Pass 1: swap 70 with last spot
+			[40,17,30,35,70]
+			- Pass 2: swap 40 with 2nd to last spot
+			[35,17,30,40,70]
+			- Pass 3: swap 35 with 3rd to last spot
+			[30,17,35,40,70]
+			- Pass 4: swap 30 with 4th to last spot
+			[17,30,35,40,70]
+			- Efficiency: O(n(n-1)) == O(n^2)
+				- array contains n elements
+					- pass 1 = n+0 == n
+					- pass 2 = n-1
+					- pass 3 = n-2
+					- pass 4 = n-3
+					== (n(n-1))/2 == O(n^2)
+		2. bubble sort:
+			Pass 1 [40,70,30,35,17] -> [40,30,70,35,17] -> [40,30,35,70,17] -> [40,30,35,17,70]
+			Pass 2 [30,40,35,17,70] -> [30,35,40,17,70] -> [30,35,17,40,70]
+			Pass 3 [30,17,35,40,70] 
+			Pass 4 [17,30,35,40,70]
+			- Efficiency: 
+				best = O(n-1)
+				worst = O(n^2)
+				average = O(n^2)
+				- if no swap occurs after a pass, you can say it is done sorted
+		3. insertion sort
+			[40,70,30,35,17] | [ , , , , ]
+			[70,30,35,17] | [40, , , , ] //insert into first element
+			[30,35,17] | [40,70, , , ]
+			[35,17] | [30,40,70, , ] //shift sorted array over
+			[17] | [30,35,40,70, ] //insert into proper slot and shift right elements over
+			[] | [17,30,35,40,70]
+			- Efficiency: 
+				best = O(n)
+				worst = O(n^2)
+				avg =  O(n^2)
+		4. merge sort
+			- recursive = more efficient
+			- strategy
+				1. divide array into equal halves
+				2. sort each half
+				3. merge the sorted halves into one sorted array
+					- one at a time
+			- Efficiency: 
+				best = O(nlog(n))
+				worst = O(nlong(n))
+				avg =  O(nlong(n)
+		5. quick sort (preferred)
+			- strategy
+				- choose a pivot
+				- partition the array about the pivot
+					- left section: items < pivot
+					- right seciont: items > pivot
+					- pivot is now in correct position
+				- sort the left and right section recursively
+			- how to choose pivot	
+				- choose first, random, last 
+			- efficiency
+				- best = O(nlogn)
+				- worst = O(n^2)
+				- avg = O(nlogn)
+				
+							Best		Worst		Avg
+		selection sort		O(n^2)		O(n^2)		O(n^2)
+		insertion sort		O(n)		O(n^2)		O(n^2)
+		bubble sort			O(n)		O(n^2)		O(n^2)
+		merge sort			O(nlogn)	O(nlogn)	O(nlogn)
+		quick sort			O(nlogn)	O(n^2)		O(nlogn)
+		
+		
+-------------------------------_GRAPHS_-----------------------------------------
+	- sets of nodes and edges
+		- adjacent vertices
+			- two vertices that are joined by an edges
+		- a path between 2 vertices
+			- sequence of edges that begins at one vertex and ends at another vertex
+			- may pass throuh same vertex more than once
+		- simple path
+			- a path that passes through a vertex only once
+		- cycle
+			- a path that begins and ends at same vertex
+		- simple cycle
+			- a cycle that does not pass through a vertex more than once
+		- connected graph
+			- a graph that has a path between each pair of distinct verteces
+		- disconnected graph
+			- a graph that has at least one pair of vertices without a path between them
+		- complete graph
+			- a graph that has an edge between each pair of distinct vertices
+			- (n(n-1))/2
+		- multigraph
+			- not a graph
+			- allows multiple edges between vertices
+		- weighted graph
+			- a graph whose edges have numeric labels
+		- undirected graph
+			- edges to not indicate a direction
+			
+			
+     ------------_Depth First Search Traversal Algorithm_------------------
+	- undirected connected graph
+		- visit each node 1x
+	DFS(string node){
+		mark node as visited
+		for each neighbor v of u
+			if v is not visited	
+				DFS(v); //recursion
+	}
+	DFS (node u){
+		//create empty stack s;
+		s.push(u); //push starting node on stack
+		//mark u as visited
+		while(! s.empty()){
+			v = s.top(); //get top element of s	
+			//if all neighbors of v have been visited
+				s.pop();
+			//else
+				//pick an unvisited neighbor x of v 
+				s.push(x); push x on stack
+				//mark x as visited	--> map<string, bool>  flag;
+		}
+	}
+	
+	
+     ------------_Breadth First Search Traversal Algorithm_----------------
+	BFS(node u){ //use queue FIFO
+		//create empty q
+		q.push_back(u);
+		//mark u as visit
+		while (!q.empty()){
+			v = q.pop_front(); //get front element of q
+			//check if all neighbors have been visited
+			//for each neighbor x of value
+				//if x is not visited yet
+					q.push_back(x);
+					mark x as visited
+
+     --------------------_Spanning_Trees_----------------------------------
+	- n nodes = (n-1) edges	 (same for all trees)
+	- of a graph G = (V, E)
+		- G' = (V', E')
+			- V' = V
+			- E' is subset of E 
+	- how to construct a spanning tree
+		- delete some edges
+			- find loop or cycle and remove an edge
+	- can construct using BFS or DFS
+		- DFS
+			- normally go alphabetical
+		- BFS 
+	- cost of tree is sum of all edges 
+		- for minimum spanning tree find spanning tree with lowest cost
+		
+		
+     --------------------_Prim's Algorithm_--------------------------------
+	- greedy algorithms: type of algorithm that used to solve/optimize problems
+		- divide big problem into smaller probs
+		- min number of coins problem
+			- .25, .10, .05, .01
+				- whats number of quarters -> # of dimes -> ... (decisions flow)
+	- divide nodes  and edges into 2 parts
+		- Min spanning Tree & rest of tree
+		- MST
+			- pick an edge with min weight that connects node in MTS to the rest (best local solution)
+				- connects node in MST to node not in MST
+				- continue picking min WEIGHT until all nodes are used
+		- cost is sum of weights
+	- Design it systemaically (let u be node in question)
+		Known: known[u] - true(already in MST) / false (not visited)
+		D: d[u] - the minimum weight of an edge that connects u to a node (rep by p[u]) in MST
+		P: (p[u],u) - represents the edge with minimum weight that connects u to MST
+		nodes:		a	b	c	d	e	f	g	h	i	//[] indicate chosen for MST
+		known		F	F	F	F	F	F	F	F	F
+		d			/	/	/	/	/	/	/	/	/
+		p			/	/	/	/	/	/	/	/	/
+		---------------------------------------------
+		nodes:		[a]	b	c	d	e	f	g	h	i
+		known		T	F	F	F	F	F	F	F	F
+		d			0	6	/	/	/	4	/	/	2
+		p			/	a	/	/	/	a	/	/	a
+		---------------------------------------------
+		nodes:		[a]	b	c	d	e	f	g	h	[i]
+		known		T	F	F	F	F	F	F	F	T
+		d			0	6	/	/	/	4	/	/	2
+		p			/	a	/	/	/	a	/	/	a
+		---------------------------------------------
+		nodes:		[a]	b	c	d	e	[f]	g	h	[i]
+		known		T	F	F	F	F	T	F	F	T
+		d			0	6	/	/	/	4	2	/	2
+		p			/	a	/	/	/	a	f	/	a
+		---------------------------------------------
+		nodes:		[a]	b	c	d	e	[f]	[g]	h	[i]
+		known		T	F	F	F	F	T	T	F	T
+		d			0	6	/	5	8	4	2	/	2
+		p			/	a	/	g	g	a	f	/	a
+		---------------------------------------------
+		nodes:		[a]	b	c	[d]	e	[f]	[g]	h	[i]
+		known		T	F	F	T	F	T	T	F	T
+		d			0	6	4	5	8	4	2	1	2
+		p			/	a	d	g	g	a	f	d	a
+		---------------------------------------------
+		nodes:		[a]	b	c	[d]	e	[f]	[g]	[h]	[i]
+		known		T	F	F	T	F	T	T	T	T
+		d			0	6	4	5	8	4	2	1	2
+		p			/	a	d	g	g	a	f	d	a
+		---------------------------------------------
+		nodes:		[a]	b	[c]	[d]	e	[f]	[g]	[h]	[i]
+		known		T	F	T	T	F	T	T	T	T
+		d			0	6	4	5	3	4	2	1	2
+		p			/	a	d	g	c	a	f	d	a
+		---------------------------------------------
+		nodes:		[a]	b	[c]	[d]	[e]	[f]	[g]	[h]	[i]
+		known		T	F	T	T	T	T	T	T	T
+		d			0	6	4	5	3	4	2	1	2
+		p			/	a	d	g	c	a	f	d	a
+		---------------------------------------------
+		nodes:		[a]	[b]	[c]	[d]	[e]	[f]	[g]	[h]	[i]	//all nodes now in MST
+		known		T	T	T	T	T	T	T	T	T
+		d			0	6	4	5	3	4	2	1	2
+		p			/	a	d	g	c	a	f	d	a
+		---------------------------------------------	
+		
+     -------------_Kruskal's Algorithm (Greedy)_------------------------ 
+	1. sort edges into ascending order by weight
+			(d,h,1)
+			(a,i,2)
+			(f,g,2)
+			(e,c,3)
+			(a,f,4)
+			(c,d,4)
+			(g,d,5)
+			(a,b,6)
+			(b,c,7)
+			(e,g,8)
+			(b,e,9)
+	2. layout nodes without edges
+		- move edges to MST and connect to nodes if will not cause loop
+		- if 2 nodes edges are in different trees add edges
+			- forest of different trees (NOT MST)
+			a	b	c	d	e	f	g	h	i
+			---------------------------------
+			a	b	c	d	e	f	g		i
+						1
+						h
+			---------------------------------
+			a	b	c	d	e	f	g		
+			2			1
+			i			h
+			---------------------------------
+			a	b	c	d	e	f			
+			2			1		2
+			i			h		g
+			---------------------------------
+			a	b	c	d		f			
+			2		3	1		2
+			i		e	h		g
+			---------------------------------
+			 a	 b	c	d					// move f tree to right subtree of a
+			2 3		3	1		
+			i f		e	h		
+			  2
+			  g
+			  
+			  
+     -----------------_Dijkstra's Algorithm(Greedy)_-----------------------
+		- known["a"]: T/F
+			- if TRUE have already constructed shortest path
+		- d["a"]
+			- weight of shortest path constructed so far
+		- p["g"] node of min weight
+			- immediate predecessor of node "g"in the shortest path
+				to "g"
+				
+		nodes:		a	b	c	d	e	f	g	h	i	
+		known		F	F	F	F	F	F	F	F	F
+		d			INF INF	INF	INF	INF	INF	INF	INF	INF
+		p			/	/	/	/	/	/	/	/	/
+		---------------------------------------------
+		nodes:		[a]	b	c	d	e	f	g	h	i	
+		known		T	F	F	F	F	F	F	F	F
+		d			0 	6	INF	INF	INF	4	INF	INF	2
+		p			a	a	/	/	/	a	/	/	a
+		---------------------------------------------
+		nodes:		[a]	b	c	d	e	f	g	h	[i]	
+		known		T	F	F	F	F	F	F	F	T
+		d			0 	6	INF	INF	INF	4	INF	INF	2
+		p			a	a	/	/	/	a	/	/	a
+		---------------------------------------------
+		nodes:		[a]	b	c	d	e	[f]	g	h	[i]	
+		known		T	F	F	F	F	T	F	F	T
+		d			0 	6	INF	INF	INF	4	6	INF	2
+		p			a	a	/	/	/	a	f	/	a
+		---------------------------------------------
+		nodes:		[a]	b	c	d	e	[f]	g	h	[i]	
+		known		T	F	F	F	F	T	F	F	T
+		d			0 	6	INF	INF	INF	4	6	INF	2
+		p			a	a	/	/	/	a	f	/	a
+		--------------------------------------------
+		nodes:		[a]	[b]	c	d	e	[f]	g	h	[i]	
+		known		T	T	F	F	F	T	F	F	T
+		d			0 	6	13	INF	15	4	6	INF	2
+		p			a	a	b	/	b	a	f	/	a
+		--------------------------------------------
+		nodes:		[a]	[b]	c	d	e	[f]	[g]	h	[i]	
+		known		T	T	F	F	F	T	T	F	T
+		d			0 	6	13	11	14	4	6	INF	2
+		p			a	a	b	g	g	a	f	/	a
+		--------------------------------------------
+		nodes:		[a]	[b]	[c]	d	e	[f]	[g]	h	[i]	
+		known		T	T	T	F	F	T	T	F	T
+		d			0 	6	13	11	14	4	6	INF	2
+		p			a	a	b	g	g	a	f	/	a
+		--------------------------------------------
+		nodes:		[a]	[b]	[c]	[d]	e	[f]	[g]	h	[i]	
+		known		T	T	T	T	F	T	T	F	T
+		d			0 	6	13	11	14	4	6	12	2
+		p			a	a	b	g	g	a	f	d	a
+		--------------------------------------------
+		nodes:		[a]	[b]	[c]	[d]	[e]	[f]	[g]	h	[i]	
+		known		T	T	T	T	T	T	T	F	T
+		d			0 	6	13	11	14	4	6	12	2
+		p			a	a	b	g	g	a	f	d	a
+		--------------------------------------------
+		nodes:		[a]	[b]	[c]	[d]	[e]	[f]	[g]	[h]	[i]	
+		known		T	T	T	T	T	T	T	T	T
+		d			0 	6	13	11	14	4	6	12	2
+		p			a	a	b	g	g	a	f	d	a
+		--------------------------------------------
+	
+Dijkstra Implementation Algorithm
+		Dijkstra(node u)
+			//initialize known array with FALSE
+			//initialize d array by INF
+			//initialize p array with NIL
+			d[u] = 0
+			while there is a node v such that known[v] = false
+				pick the lowest d[w] node  among known nodes
+				known[w] = true
+				for each adjacent node v of node w/
+					if known[v] == true
+						continue (do nothin)
+					if (d[v] > (d[w] + weight[w][v])
+						d[v] = d[w]+weight[w][v]
+						p[v] = w
+			end while
+			
+     -------------------_Dynamic Programming_-----------------------------------
+	- an optimization problem
+		- a problem in which you want to find, not just a solution but the best solution
+	- greedy algorithm sometimes works well for optimization problems	
+		- works in phases
+		- you can take the best you can get right now, without regard for future
+			consequences
+	- Huffman encoding
+		- encode a test that comprises characters from some n-char alphabet by assigning to each
+			of the text's chars some sequence of bits called codeword
+				- fixed length encoding
+	- dynamic programming
+		- method for solving complex problems by breaking them down into simpler sub problems
+		- it is applicable to problems exhibiting the properties of	
+			- overlapping subprograms
+			- optimal substructure
+		
+		
+		
+----------------------------_KNAPSACK_------------------------------------------
+	-dynamic programming solution for maximizing the knapsack's total value given 
+a limited Capacity(C)
+
+W: Weight
+C: Capacity
+
+-Given problem instance:
+
+Item  Value  Weight
+-------------------
+  1    16      4				Capacity(C) = 10 
+-------------------            
+  2     8      2
+-------------------
+  3    13      5
+-------------------
+  4    10      3
+-------------------
+
+
+-For each table value 2 (piecewise(2)):
+
+	1) create matrix
+		-Rows: n+1
+		-Cols: C+1
+	
+	2) Set K[i,0](col) to 0, Set K[0, W](row) to 0
+    
+	3)Other Cells:
+  Take the Highest Value between:
+	-(a)One above it   
+	 -----(or)-----
+	-(b)Up 1, shift left items's weight. Add that value to cur i's value.
+	
+-Algorithm
+				 { max(K[i-1],  (v(i) + K[i-1], W-W(i)]))     If: W(i) <=  W  }
+	3)  K[i,W] = {  										             	  }	
+				 { K[i-1, W] 					              If: W(i) >   W  }  								
+
+-Table
+(i)/(W): 0	 1 	2	3	4	5	6	7	8	9  10
+---------------------------------------------------
+ 0:    : 0	 0	0	0	0	0	0	0	0	0	0
+---------------------------------------------------
+ 1:    : 0	 0	0	0  16  16  16  16  16  16  16   
+---------------------------------------------------
+ 2:    : 0	 0	8	8  16  16  24  24  24  24  24
+---------------------------------------------------
+ 3:    : 0	 0	8	8  16  16  24  24  24  29  29
+---------------------------------------------------
+ 4:    : 0	 0	8  10  16  18  24  26  26  34  34
+---------------------------------------------------
+
+-Last Step
+	-Algorithm to determine contents from Table
+	i = n // # of items
+	j = C // capacity
+	while i > 0 and j > 0:
+		if K[i, j] != K[i-1, j]:
+			inKnapsack[i] = true
+			j -= wi	
+			i -= 1
+		else:
+			i -= 1
+	
+
+-Solution 
+	-(Items Included): 1, 2, 4 
+	
