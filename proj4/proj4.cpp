@@ -1,4 +1,4 @@
-/* 
+/* Author: Michael Ziegler
  * CSCI 3110-001
  * Project #4
  * Due: 02/28/19
