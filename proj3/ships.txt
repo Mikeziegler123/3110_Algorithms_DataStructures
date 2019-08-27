@@ -1,0 +1,15 @@
+Calypso 450 0.15 0.25 0.6 4000
+Hauler 725 800 0.37 1000 46
+
+/*
+-----> Line 1: CRUISE_SHIP:
+	(1)shipName;             (2)fuelLoad(double);     (3)Luxury percentage;
+    (4)Upper Deck percentage;(5)Lower Deck percentage;(6)numPassengers(integer)
+						 
+-(Note: Percentages Must Add up to 1.00)
+--------------------------------------------------------------------------------
+-----> Line 2:  CARGO_SHIP:
+	 (1)shipName;         	 (2)fuelLoad(double); 
+	 (3)CargoCap(integer);	 (4)Forward Cargo Bay percentage(double);
+	 (5)cargoTons(integer);  (6) Fuel flashpoint (integer)
+*/

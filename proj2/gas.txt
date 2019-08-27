@@ -1,0 +1,5 @@
+500
+25
+Unleaded 100 2.0 0.5
+Midgrade 50 2.5 0.2
+Premium+ 75 5.0 0.3
