@@ -18,7 +18,7 @@ looking ahead.
 
 𝗣𝗿𝗼𝗷𝟲: A C++ program that reads input from a file "𝗶𝗻𝗽𝘂𝘁.𝘁𝘅𝘁", and builds a binary search tree from the input data. Each of the words of the data set are stored among the tree, and are able to be queried for both: (𝟭)number of occurances of a particular word, and (𝟮)words that mmeet or exceed a specifies threshold of occurances within the input file.
 
-𝗣𝗿𝗼𝗷𝟳: A C++ program using a Priority_Queue Class implimented as a binary heap which recieves two parameters:
+𝗣𝗿𝗼𝗷𝟳: A C++ program using a Priority_Queue Class implimented as a binary heap which receives two parameters:
         1) The type of the element stored in the heap. 
  	  	  2) A comparator class type.
 
